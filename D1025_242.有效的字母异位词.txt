@@ -1,0 +1,26 @@
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        # 错误思路：符合字母异位词，那说明只是原来的字符打乱排序，则说明s和t的ascll码之和一定是一样的
+        # 正确思路：①对s和t分别按照ascii码排序，如果排序后一致则是True
+        # ② 维护一个长度为26个字母的列表，记录每个字母出现的次数。（也可以用字典dict来实现，类似于java的哈希表）
+
+        # 优化点1：长度不同，一定是false
+        if len(s) != len(t):
+            return False
+
+        table = [0]*26
+
+        # 记录s中的每种字母数量
+        for ch in s:
+            index = ord(ch) - ord('a')
+            table[index] += 1
+
+        # 根据t中的数量逐个扣除
+        for ch in t:
+            index = ord(ch) - ord('a')
+            table[index] -= 1
+
+            if table[index] < 0 :
+                return False
+        
+        return True
