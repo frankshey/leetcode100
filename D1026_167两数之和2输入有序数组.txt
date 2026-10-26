@@ -1,0 +1,28 @@
+class Solution:
+    def twoSum(self, numbers: list[int], target: int) -> list[int]:
+        # 灵山视频讲解：相向双指针，利用数组已经排好序的这一特点
+
+        #注意这个题目比较别扭，输出要下标从1开始，可以先正常写最后再+1
+
+        left  = 0 
+        right = len(numbers) - 1
+
+        while True: #因为题目已经说一定存在答案，所以肯定能跳出循环
+
+            if numbers[left] + numbers[right] > target:
+                right -= 1
+
+            if numbers[left] + numbers[right] < target:
+                left += 1
+
+            if numbers[left] + numbers[right] == target:
+                
+                index1 = left + 1
+                index2 = right + 1
+            
+                ans = [index1, index2]
+
+                return ans
+
+
+

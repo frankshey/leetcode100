@@ -1,0 +1,39 @@
+class Solution:
+    def threeSum(self, nums: list[int]) -> list[list[int]]:
+        #灵山视频：借鉴两数之和思路，先排序变为有序数组
+        nums.sort()
+        
+        #比两数之和更复杂的一点：要保证答案不含重复三元组。
+        #输出三元组[i,j,k]，人工规定i<j<k，方便写代码
+        
+        ans = []
+        n = len(nums)
+        #用i作为遍历指针，再去找j和k，i最多遍历到倒数第三位
+        for i in range(0, n-2):
+            x = nums[i]
+            #这里用来跳过重复的i
+            if i > 0 and x == nums[i-1]:
+                continue
+            # j 是左指针，k是右指针
+            j = i + 1
+            k = n - 1
+            while j < k:
+                s = x + nums[j] + nums[k]
+                if s > 0:
+                    k -= 1
+                elif s < 0:
+                    j += 1
+                else:
+                    ans.append([x, nums[j], nums[k]])
+                    # 这里最难理解的一点出现了，为了把重复的j和k也跳过
+                    # 注意移动 j 是因为当前配对已经找到，接下来要寻找新的数值组合；
+                    j += 1
+                    #下面两行起到去重的作用
+                    while j < k and nums[j] == nums[j-1]:
+                        j += 1
+                    # 注意移动 k 是因为当前配对已经找到，接下来要寻找新的数值组合；
+                    k -= 1
+                    # 注意上面的 k -= 2，所以下面的这个num[k+1]不会越界
+                    while k > j and nums[k] == nums[k+1]:
+                        k -= 1
+        return  ans
