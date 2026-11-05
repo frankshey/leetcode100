@@ -1,0 +1,84 @@
+class Solution:
+    def threeSum(self, nums: list[int]) -> list[list[int]]:
+        #灵山视频：借鉴两数之和思路，先排序变为有序数组
+        nums.sort()
+        
+        #比两数之和更复杂的一点：要保证答案不含重复三元组。
+        #输出三元组[i,j,k]，人工规定i<j<k，方便写代码
+        
+        ans = []
+        n = len(nums)
+        #用i作为遍历指针，再去找j和k，i最多遍历到倒数第三位
+        for i in range(0, n-2):
+            x = nums[i]
+            #这里用来跳过重复的i
+            if i > 0 and x == nums[i-1]:
+                continue
+            # j 是左指针，k是右指针
+            j = i + 1
+            k = n - 1
+            while j < k:
+                s = x + nums[j] + nums[k]
+                if s > 0:
+                    k -= 1
+                elif s < 0:
+                    j += 1
+                else:
+                    ans.append([x, nums[j], nums[k]])
+                    # 这里最难理解的一点出现了，为了把重复的j和k也跳过
+                    # 注意移动 j 是因为当前配对已经找到，接下来要寻找新的数值组合；
+                    j += 1
+                    #下面两行起到去重的作用
+                    while j < k and nums[j] == nums[j-1]:
+                        j += 1
+                    # 注意移动 k 是因为当前配对已经找到，接下来要寻找新的数值组合；
+                    k -= 1
+                    # 注意上面的 k -= 2，所以下面的这个num[k+1]不会越界
+                    while k > j and nums[k] == nums[k+1]:
+                        k -= 1
+        return  ans
+————————————————
+#自己的注释版本
+class Solution:
+    def threeSum(self, nums: list[int]) -> list[list[int]]:
+        # 首先排序，转化为不递减的数组，然后想一下怎么转化成两数之和
+        # 同样是循环判断结构，但这个是双层循环，
+        # 因为两数之和本身需要一层循环，这里变为内循环控制j和k，外循环负责控制i
+
+        #如何保证不重复？不仅下标不一样，而且值也不能一样，不然就是一样的三元组
+        #这样可以通过判断指针下一个指向的值是否与上一个一样，如果一样直接continue这个循环
+        #这样i需要判断continue，j和k同样都需要判断continue,但j和k采用的是while来实现的同等效果
+    
+        nums.sort()
+
+        ans = []
+
+        # j 和 k不能写到循环外面，j随着i的循环每次都要从i的右侧开始
+        for i in range(len(nums) - 2):
+            j = i + 1
+            k = len(nums) - 1
+
+            if nums[i-1] == nums[i] and i > 0: #这样有bug，第一次循环会越界,让它第一次不执行就好，加一个if判断
+                continue
+
+            # j和k如何写continue，这是最难的点，暂时不会
+            while j < k:
+                if nums[j] + nums[k] < -nums[i]:
+                    j += 1
+                elif nums[j] + nums[k] > -nums[i]:
+                    k -= 1
+                else:
+                    ans.append([nums[i],nums[j],nums[k]])
+                    #找到答案后，指针必须要变，否则while一直在执行else的这一句，死循环了
+                    j += 1
+                    k -= 1
+                    #在这里进行j和k的去重工作,不适用if而是while，是避免连续多个重复值出现
+                    while j < k and nums[j] == nums[j-1]:
+                        j += 1
+                    while j < k and nums[k] == nums[k+1]:
+                        k -= 1
+
+
+        return ans
+
+

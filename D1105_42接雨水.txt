@@ -1,0 +1,32 @@
+#先维护前缀最大值数组、后缀最大值数组
+#直觉是拿当前位置的value和前缀数组中的最大值进行比较（自己画图能推出来）
+
+#核心公式：当前位置雨水容量 ==“当前位两个数组的最小值”-“当前位置高度”
+
+#循环遍历多个list的时候涉及到新语法zip，不用也行，用了可读性更好
+
+class Solution:
+    def trap(self, height: list[int]) -> int:
+        
+        n = len(height)
+        preMax = [0] * n
+        sufMax = [0] * n
+        #动态累加每个位置接雨水的数量
+        ans = 0
+
+        #生成前缀最大值数组
+        preMax[0] = height[0]
+        for i in range(1,n):
+            preMax[i] = max(height[i], preMax[i-1])
+
+            
+        #生成后缀最大值数组
+        sufMax[-1] = height[-1]
+        for i in range(n-2,-1,-1):
+            sufMax[i] = max(height[i],sufMax[i+1])
+        
+        
+        for i in range(0, n):
+            ans += min(preMax[i],sufMax[i]) - height[i]
+        
+        return ans

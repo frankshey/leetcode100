@@ -1,0 +1,24 @@
+class Solution:
+    def maxArea(self, height: list[int]) -> int:
+        #推理后的直觉：
+        #对于最外层两条线，要想获得容量更大的容器，肯定要舍弃前者较短的那个线、和内部更短的线，
+        #1.哪边线短，就移动哪个
+        #2.如果移动后比原来短或相等，直接继续移动
+
+        #维护一个max_area,动态更新为目前找到的的最大值
+
+        left = 0
+        right = len(height) - 1
+        max_area = 0
+
+        while left < right:
+            area = (right - left) * min(height[right], height[left])
+            max_area = max(max_area, area)
+
+            if height[left] < height[right]:
+                left += 1
+            else:#相等的时候，移动谁都行
+                right -= 1
+        
+        return max_area
+        
