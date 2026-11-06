@@ -1,0 +1,35 @@
+# 暴力思想：枚举每个左端点，不断向右扩展，每扩展一次加总判断是否大于target，直至达到target。但复杂度是平方。
+
+# 滑动窗口：在暴力思想的基础上，对于新的左端点，旧右端点之前那些已经不够的位置，不必再试。去掉左边的正数之后，它们只会更不够。因此右端点可以不回头。
+
+'''
+和不够：
+    右端点向右扩展，加入新元素。
+
+和够了：
+    记录长度。
+    左端点向右移动，尝试把窗口缩得更短。
+注意：和够了之后，可能可以连续缩短多次，所以要用 while。
+'''
+class Solution:
+    def minSubArrayLen(self, target: int, nums: list[int]) -> int:
+
+        left = 0
+        window_sum = 0
+        minLen = float('inf')
+
+        #外循环负责控制滑动数组往右扩张，每循环一次往右纳入一个元素
+        for right in range(len(nums)):
+            window_sum += nums[right]
+
+            while window_sum >= target:
+                length = right - left + 1
+                minLen = min(minLen,length)
+                #内循环负责控制滑动数组的左侧收缩，每while一次左侧吐出来一个元素
+                window_sum -= nums[left] 
+                left += 1
+
+        if minLen == float('inf'):
+            return 0
+
+        return minLen
