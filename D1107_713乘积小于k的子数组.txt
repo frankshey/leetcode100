@@ -1,0 +1,23 @@
+class Solution:
+    def numSubarrayProductLessThanK(self, nums: list[int], k: int) -> int:
+        window_pro = 1
+        result = 0
+        left = 0
+        if k <= 1:
+            return 0
+        for right in range(len(nums)):
+            window_pro *= nums[right]
+
+                #注意难点在这里，result的数量可不是加一
+                #每一轮只统计以当前 right 结尾的子数组。
+                #一个合法窗口，可以一次贡献 right - left + 1 个以当前右端点结尾的答案。(注意是以right结尾，不包含其它结尾的。)
+
+            while window_pro >= k and left < len(nums):
+                window_pro = window_pro / nums[left]
+                left += 1
+
+            result += right - left + 1
+        
+        #这个是怎么处理均不符合的情况的？所有元素都比k大,比如[100，200，300]，这时候100不符合，window_pro会除掉100变为1，result + 0，然后继续判断200
+
+        return result
