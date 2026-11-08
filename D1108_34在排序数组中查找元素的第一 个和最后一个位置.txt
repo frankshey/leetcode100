@@ -1,0 +1,49 @@
+# 满足递增或递减规律，适用二分法。二分法一次性可以获得一半区间的信息量，凡是已知信息的位置，都视为闭区间，未知的视为开区间，如果中间指针M落在未知，右指针R落在已知，那么就成左开右闭区间了，不推荐这种写法。容易写错死循环。
+# 二分法最容易搞混的，是开闭区间的处理，要始终保持同一，如果用闭区间就一直用闭区间。(确保l和r一直在尚未判断的位置)
+# 二分法只有当左右指针相交叉时，全部区间就都已知，一定要带等号，否则l和r共同指向的那个元素就无法判断大小。所以循环条件是 left <= right
+# 关键:循环不变量，L-1始终是红色（小于目标数的区间），R+1始终是蓝色（大于目标数的区间）
+class Solution:     
+    def lower_bound(self, nums: list[int], target: int) -> list[int]:
+        #写一个专门用来找大于等于的，剩下三种可以相互转换。
+        l = 0
+        r = len(nums) - 1
+        while l <= r:
+            m = (l + r) // 2
+            if nums[m] < target:
+                l = m + 1
+            else:
+                r = m - 1
+        return l # l在经过while之后，一定会指向>=target的第一个数
+        
+    def searchRange(self, nums: list[int], target: int) -> list[int]:
+        start = self.lower_bound(nums, target)
+        end = self.lower_bound(nums, target + 1) - 1
+        
+        # 要加上start == len(nums)，不然只写后者的话无法处理指针越界的情况
+        if start == len(nums) or nums[start] != target:
+            return [-1, -1]
+
+        return [start, end]
+
+
+
+
+
+'''暴力做法，两个循环，正向循环找第一次出现，反向循环找最后一次出现，时间复杂度O(n)，
+class Solution:
+    def searchRange(self, nums: list[int], target: int) -> list[int]:
+        flag = 0
+        ans = [-1, -1]
+        for i in range(len(nums)):
+            if nums[i] == target:
+                ans[0] = i 
+                flag = 1
+                break
+        for i in range(len(nums)-1,-1,-1):
+            if nums[i] == target:
+                ans[1] = i 
+                flag = 1
+                break
+
+        return ans
+'''
