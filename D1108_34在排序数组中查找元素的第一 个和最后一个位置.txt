@@ -12,8 +12,17 @@ class Solution:
             if nums[m] < target:
                 l = m + 1
             else:
-                r = m - 1
-        return l # l在经过while之后，一定会指向>=target的第一个数
+                r = m - 1 
+'''  
+上面这一行最容易犯错，如果m大于等于target，那么m就有可能是第一个大于等于target的数，会习惯的缩区间令r = m,使这个区间保留可能的答案。问题在于对这个m的值与target值相等的时候，该怎么处理，你不了解——即使左边都是更小的数，最后的 l 也会停在原来的第一个大于等于的位置m  
+''' 
+       return l # l在经过while之后，一定会指向>=target的第一个数
+'''
+这份代码始终保持：
+l 左边的元素：全部 < target
+r 右边的元素：全部 >= target
+[l, r]：还没检查完  
+'''
         
     def searchRange(self, nums: list[int], target: int) -> list[int]:
         start = self.lower_bound(nums, target)
