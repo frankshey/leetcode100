@@ -1,0 +1,16 @@
+class Solution:
+    def findPeakElement(self, nums: list[int]) -> int:
+        left = 0
+        right =len(nums) - 1
+
+        while left < right:
+            m = (left + right) // 2
+            if nums[m] < nums[m+1]:
+                left = m + 1
+            else:
+                right = m
+                # right = m - 1 最容易写错成这个样子
+                #题目决定了前后不可能相等，如果是下坡，那么m的位置要么是峰值本身，要么是峰值右侧，right缩小区间不能跳过m
+            
+        return left
+        
